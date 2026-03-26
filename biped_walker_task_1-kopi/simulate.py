@@ -1,5 +1,3 @@
-
-
 import numpy as np  # type: ignore
 from scipy.integrate import solve_ivp  # type: ignore
 
@@ -10,8 +8,9 @@ from impact import P_mat, impact_map  # type: ignore
 
 # ── Experiment 1: Gravitational Collapse ────────────────────
 
+
 def run_gravity_collapse():
-    
+
     q0 = np.array([0.1, -0.1, 0.05, -0.05, 0.0])
     dq0 = np.zeros(5)
     x0 = np.concatenate([q0, dq0])
@@ -35,13 +34,14 @@ def run_gravity_collapse():
 
 # ── Experiment 2: Frozen Body + Impact ──────────────────────
 
+
 def validate_frozen_body_setup(q0, dq0):
-   
+
     pass
 
 
 def f_frozen(t, x):
-    
+
     q_val = x[:5]
     dq_val = x[5:]
 
@@ -60,8 +60,8 @@ def f_frozen(t, x):
 
 
 def event_impact(t, x):
-  
-    P4 = get_skeleton(x[:5])[5]
+
+    P4 = get_skeleton(x[:5])[4]
     return P4[1]
 
 
@@ -70,7 +70,7 @@ event_impact.direction = -1
 
 
 def run_frozen_body_impact():
-   
+
     q0 = np.array([0.0, -0.3, 0.0, 0.0, 0.05])
     dq0 = np.array([0.0, 0.0, 0.0, 0.0, -0.5])
     x0 = np.concatenate([q0, dq0])
@@ -90,7 +90,7 @@ def run_frozen_body_impact():
     print("Frozen body: q1..q4 stayed constant.")
 
     x_minus = sol1.y[:, -1]
-    P4_at_impact = get_skeleton(x_minus[:5])[5]
+    P4_at_impact = get_skeleton(x_minus[:5])[4]
     print(f"Free foot y at impact: {P4_at_impact[1]:.6f}")
 
     x_plus = impact_map(x_minus)
@@ -107,7 +107,9 @@ def run_frozen_body_impact():
         print("KE decreased across the prescribed impact map.")
     else:
         print("Note: the prescribed assignment impact map did not decrease KE here;")
-        print("this indicates a remaining inconsistency outside the frozen-body driver.")
+        print(
+            "this indicates a remaining inconsistency outside the frozen-body driver."
+        )
 
     sol2 = solve_ivp(
         lambda t, x: f_SS(t, x, np.zeros(4)),
@@ -133,3 +135,4 @@ if __name__ == "__main__":
     print("Experiment 2: Frozen Body + Impact")
     print("=" * 50)
     sol1, x_minus, x_plus, sol2 = run_frozen_body_impact()
+
