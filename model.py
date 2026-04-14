@@ -106,3 +106,7 @@ dq_plus = ca.solve(M_plus, RHS)
 x_plus = ca.vertcat(q_plus, dq_plus)
 
 impact_map_fn = ca.Function("impact_map", [x_minus], [x_plus], ["x_minus"], ["x_plus"])
+
+
+T_fn = ca.Function("T_func", [q, dq], [T], ["q", "dq"], ["T"])
+V_fn = ca.Function("V_func", [q], [V], ["q"], ["V"])

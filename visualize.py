@@ -1,4 +1,4 @@
-from model import com_pos_fn, joint_pos_fn, P5_END_fn, P4_fn
+from model import com_pos_fn, joint_pos_fn, P5_END_fn, P4_fn, T_fn, V_fn
 import matplotlib.animation as animation
 import matplotlib.pyplot as plt
 import numpy as np
@@ -47,6 +47,34 @@ def plot_collapse_snapshots(sol_traj, n_frames=8):
     plt.savefig("collapse_snapshots.png", dpi=150)
     plt.show()
 
+
+def plot_energy(sol_traj, dt):
+    state_array = np.array(sol_traj)  # (10, n_steps+1)
+    n = state_array.shape[1]
+    t = np.arange(n) * dt
+
+    T_vals = np.array([
+        float(T_fn(state_array[:5, i], state_array[5:, i]))
+        for i in range(n)
+    ])
+    V_vals = np.array([
+        float(V_fn(state_array[:5, i]))
+        for i in range(n)
+    ])
+    E_vals = T_vals + V_vals
+
+    fig, ax = plt.subplots(figsize=(10, 5))
+    ax.plot(t, T_vals, label="Kinetic energy $T$")
+    ax.plot(t, V_vals, label="Potential energy $V$")
+    ax.plot(t, E_vals, "k-", lw=2, label="Total energy $E = T + V$")
+    ax.set_title("Total Mechanical Energy During Gravitational Collapse")
+    ax.set_xlabel("Time [s]")
+    ax.set_ylabel("Energy [J]")
+    ax.legend()
+    ax.grid(True, alpha=0.3)
+    plt.tight_layout()
+    plt.savefig("energy_plot.png", dpi=150)
+    plt.show()
 
 def plot_frozen_body_snapshots(sol1_y, sol2_y, n_frames=6):
 

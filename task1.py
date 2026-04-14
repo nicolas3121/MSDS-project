@@ -1,6 +1,7 @@
 from model import M_fn, c_fn, f_SS, joint_pos_fn, impact_map_fn, P4_fn
 from visualize import (
     plot_collapse_snapshots,
+    plot_energy,
     plot_frozen_body_snapshots,
     animate_collapse,
     animate_frozen_and_impact,
@@ -46,6 +47,8 @@ def run_gravity_collapse():
     sim_fn = build_gravity_collapse_fn(n_steps, dt)
 
     sol_traj = sim_fn(x0)
+
+    plot_energy(sol_traj.full(), dt)
 
     M_val = M_fn(q0)
     try:
